@@ -7,9 +7,10 @@
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-scripts": "^5.0.0",
     "firebase": "12.7.0",
-    "react-router-dom": "7.11.0"
+    "react-router-dom": "7.11.0",
+    "ajv": "^8.12.0",
+    "react-scripts": "5.0.1"
   },
   "devDependencies": {
     "@types/react": "19.0.0",
