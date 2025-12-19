@@ -1,0 +1,250 @@
+/* 全域設定 */
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial,
+    sans-serif;
+  background-color: #f0f2f5;
+  color: #333;
+}
+
+/* ============================
+   1. 上傳頁面 (手機端)
+   ============================ */
+.upload-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.upload-card {
+  background: white;
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* 切換類型的標籤 (Tab) */
+.tab-group {
+  display: flex;
+  background: #eee;
+  padding: 5px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  color: #666;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+.tab-btn.active {
+  background: white;
+  color: #007bff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 輸入框與按鈕 */
+.styled-input,
+.styled-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e1e4e8;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  margin-bottom: 15px;
+}
+.styled-textarea {
+  min-height: 100px;
+  resize: none;
+  font-family: inherit;
+}
+.file-input {
+  width: 100%;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px dashed #ccc;
+  margin-bottom: 15px;
+}
+.upload-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.upload-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* ... (保留上傳頁面的 CSS: upload-wrapper, upload-card 等等) ... */
+/* 請從這裡往下取代 */
+
+/* ============================
+   2. 展示頁面 (大螢幕 - 橫向流動)
+   ============================ */
+.flow-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #111;
+  display: flex;
+  flex-direction: column; /* 上下兩排 */
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* 軌道容器 */
+.flow-track-wrapper {
+  flex: 1; /* 上下均分高度 */
+  display: flex;
+  align-items: center; /* 內容垂直置中 */
+  overflow: hidden;
+  position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 移動的軌道 */
+.flow-track {
+  display: flex;
+  gap: 40px; /* 每個展品之間的距離 */
+  padding: 0 20px;
+  /* 動畫設定：
+       scroll-left: 向左跑
+       scroll-right: 向右跑
+    */
+}
+
+/* 展品卡片 (統一大小) */
+.flow-item {
+  flex: 0 0 auto; /* 防止被壓縮 */
+  width: 300px; /* 固定寬度 */
+  height: 300px; /* 固定高度 */
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  background: #222;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s;
+}
+
+.flow-item:hover {
+  transform: scale(1.05); /* 滑鼠移過去會放大 */
+  z-index: 10;
+}
+
+/* 照片樣式 */
+.flow-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 便利貼樣式 */
+.sticky-note-box {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  color: #333;
+}
+
+/* 暱稱標籤 (浮在卡片內) */
+.item-tag {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+}
+.sticky-note-box .item-tag {
+  background: rgba(255, 255, 255, 0.4);
+  color: #000;
+}
+
+/* 動畫定義 */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+  /* 為什麼是 -50%？因為我們會把資料複製一份，讓它頭尾相接 */
+}
+
+@keyframes scroll-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+/* ... 原本的 CSS ... */
+
+/* 新增：展示頁面的懸浮標題 */
+.page-title {
+  position: absolute; /* 絕對定位，浮在最上層 */
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  /* 加上內距，讓字不要貼頂 */
+  padding: 25px 0 60px 0;
+
+  text-align: center;
+  font-size: 3rem; /* 字體大一點 */
+  font-weight: 800;
+  color: #fff;
+  z-index: 100; /* 確保蓋過流動的照片 */
+
+  /* 黑色漸層背景：從上面深黑 -> 到下面透明，讓文字清楚但不會擋住照片 */
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+
+  /* 文字陰影，增加立體感 */
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+  letter-spacing: 3px; /* 字距拉開一點比較大氣 */
+  pointer-events: none; /* 讓滑鼠可以直接穿透標題點到後面的照片(如果有的話) */
+}
+
+/* 手機版稍微縮小字體，避免換行太難看 */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 1.8rem;
+    padding: 15px 0 40px 0;
+  }
+}
