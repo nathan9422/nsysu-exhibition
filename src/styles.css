@@ -109,58 +109,76 @@ body {
   height: 100vh;
   background-color: #111;
   display: flex;
-  flex-direction: column; /* 上下兩排 */
+  flex-direction: column;
   justify-content: center;
   overflow: hidden;
+  /* 防止手機瀏覽器滑動導致網址列伸縮影響高度 */
+  touch-action: none;
 }
 
-/* 軌道容器 */
 .flow-track-wrapper {
-  flex: 1; /* 上下均分高度 */
+  flex: 1;
   display: flex;
-  align-items: center; /* 內容垂直置中 */
+  align-items: center;
   overflow: hidden;
   position: relative;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* 移動的軌道 */
 .flow-track {
   display: flex;
-  gap: 40px; /* 每個展品之間的距離 */
+  gap: 40px;
   padding: 0 20px;
-  /* 動畫設定：
-       scroll-left: 向左跑
-       scroll-right: 向右跑
-    */
+
+  /* ⚠️ 關鍵修正 1：強制寬度為內容總長，防止手機擠壓 */
+  width: max-content;
+
+  /* ⚠️ 關鍵修正 2：啟動 GPU 硬體加速，手機跑起來才順 */
+  will-change: transform;
 }
 
-/* 展品卡片 (統一大小) */
+/* 展品卡片 */
 .flow-item {
-  flex: 0 0 auto; /* 防止被壓縮 */
-  width: 300px; /* 固定寬度 */
-  height: 300px; /* 固定高度 */
+  flex: 0 0 auto; /* 禁止壓縮 */
+  width: 300px;
+  height: 300px;
   border-radius: 20px;
   overflow: hidden;
   position: relative;
   background: #222;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  transition: transform 0.3s;
+  /* 加上 transform-style 讓 iOS 渲染更順 */
+  transform: translateZ(0);
 }
 
-.flow-item:hover {
-  transform: scale(1.05); /* 滑鼠移過去會放大 */
-  z-index: 10;
+/* ⚠️ 關鍵修正 3：手機版專用調整 (直立拿手機時) */
+@media (max-width: 768px) {
+  .flow-track {
+    gap: 20px; /* 間距縮小 */
+  }
+
+  .flow-item {
+    width: 180px; /* 卡片縮小 */
+    height: 180px;
+  }
+
+  .page-title {
+    font-size: 1.5rem; /* 標題縮小 */
+    padding: 15px 0 30px 0;
+  }
+
+  /* 調整上下兩排的高度比例，讓標題不會擋住太多 */
+  .flow-container {
+    padding-top: 50px;
+  }
 }
 
-/* 照片樣式 */
+/* ... 以下保留原本的圖片、便利貼樣式 ... */
 .flow-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-
-/* 便利貼樣式 */
 .sticky-note-box {
   width: 100%;
   height: 100%;
@@ -174,8 +192,14 @@ body {
   font-family: "Comic Sans MS", cursive, sans-serif;
   color: #333;
 }
+/* 手機版便利貼字體縮小 */
+@media (max-width: 768px) {
+  .sticky-note-box {
+    font-size: 1rem;
+    padding: 10px;
+  }
+}
 
-/* 暱稱標籤 (浮在卡片內) */
 .item-tag {
   position: absolute;
   bottom: 10px;
@@ -191,7 +215,7 @@ body {
   color: #000;
 }
 
-/* 動畫定義 */
+/* 動畫定義 (不變) */
 @keyframes scroll-left {
   0% {
     transform: translateX(0);
@@ -199,9 +223,7 @@ body {
   100% {
     transform: translateX(-50%);
   }
-  /* 為什麼是 -50%？因為我們會把資料複製一份，讓它頭尾相接 */
 }
-
 @keyframes scroll-right {
   0% {
     transform: translateX(-50%);
@@ -210,41 +232,25 @@ body {
     transform: translateX(0);
   }
 }
-/* ... 原本的 CSS ... */
 
-/* 新增：展示頁面的懸浮標題 */
+/* 標題樣式 (不變) */
 .page-title {
-  position: absolute; /* 絕對定位，浮在最上層 */
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-
-  /* 加上內距，讓字不要貼頂 */
   padding: 25px 0 60px 0;
-
   text-align: center;
-  font-size: 3rem; /* 字體大一點 */
+  font-size: 3rem;
   font-weight: 800;
   color: #fff;
-  z-index: 100; /* 確保蓋過流動的照片 */
-
-  /* 黑色漸層背景：從上面深黑 -> 到下面透明，讓文字清楚但不會擋住照片 */
+  z-index: 100;
   background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0.9) 0%,
     rgba(0, 0, 0, 0) 100%
   );
-
-  /* 文字陰影，增加立體感 */
   text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
-  letter-spacing: 3px; /* 字距拉開一點比較大氣 */
-  pointer-events: none; /* 讓滑鼠可以直接穿透標題點到後面的照片(如果有的話) */
-}
-
-/* 手機版稍微縮小字體，避免換行太難看 */
-@media (max-width: 768px) {
-  .page-title {
-    font-size: 1.8rem;
-    padding: 15px 0 40px 0;
-  }
+  letter-spacing: 3px;
+  pointer-events: none;
 }
