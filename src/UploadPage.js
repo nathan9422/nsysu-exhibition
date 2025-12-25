@@ -5,14 +5,7 @@ import { db, storage } from "./firebase";
 import "./styles.css";
 
 // 定義一組好看的便利貼顏色 (粉彩系)
-const NOTE_COLORS = [
-  "#ffeb3b", // 黃
-  "#ff80ab", // 粉紅
-  "#80d8ff", // 藍
-  "#b9f6ca", // 綠
-  "#ea80fc", // 紫
-  "#ff9e80", // 橘
-];
+const NOTE_COLORS = ["#ffeb3b", "#ff80ab", "#80d8ff", "#b9f6ca", "#ea80fc", "#ff9e80"];
 
 export default function UploadPage() {
   const [type, setType] = useState("image");
@@ -28,7 +21,7 @@ export default function UploadPage() {
     setUploading(true);
     try {
       let content = "";
-      let noteColor = null; // 預設沒有顏色
+      let noteColor = null;
 
       if (type === "image") {
         const fileRef = ref(storage, `exhibition/${Date.now()}_${file.name}`);
@@ -36,7 +29,6 @@ export default function UploadPage() {
         content = await getDownloadURL(fileRef);
       } else {
         content = noteText;
-        // 如果是便利貼，隨機選一個顏色
         noteColor = NOTE_COLORS[Math.floor(Math.random() * NOTE_COLORS.length)];
       }
 
@@ -44,7 +36,7 @@ export default function UploadPage() {
         type: type,
         content: content,
         nickname: nickname || "神秘觀展人",
-        noteColor: noteColor, // 儲存顏色
+        noteColor: noteColor,
         createdAt: serverTimestamp(),
       });
 
@@ -62,55 +54,23 @@ export default function UploadPage() {
   return (
     <div className="upload-wrapper">
       <div className="upload-card">
-        <h2 className="title">✨ 上傳展覽內容</h2>
-
+        {/* ⭐ 修改標題 */}
+        <h2 className="title">分享你的西灣美景</h2>
+        
         <div className="tab-group">
-          <button
-            className={`tab-btn ${type === "image" ? "active" : ""}`}
-            onClick={() => setType("image")}
-          >
-            📸 照片
-          </button>
-          <button
-            className={`tab-btn ${type === "note" ? "active" : ""}`}
-            onClick={() => setType("note")}
-          >
-            📝 便利貼
-          </button>
+          <button className={`tab-btn ${type === "image" ? "active" : ""}`} onClick={() => setType("image")}>📸 照片</button>
+          <button className={`tab-btn ${type === "note" ? "active" : ""}`} onClick={() => setType("note")}>📝 便利貼</button>
         </div>
 
-        <input
-          className="styled-input"
-          type="text"
-          placeholder="你的暱稱"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-        />
+        <input className="styled-input" type="text" placeholder="你的暱稱" value={nickname} onChange={(e) => setNickname(e.target.value)} />
 
         {type === "image" ? (
-          <input
-            className="file-input"
-            type="file"
-            accept="image/*"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
+          <input className="file-input" type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
         ) : (
-          <textarea
-            className="styled-textarea"
-            placeholder="寫下你的想法..."
-            value={noteText}
-            onChange={(e) => setNoteText(e.target.value)}
-            style={{ backgroundColor: "#fff9c4" }} // 輸入框稍微變黃提示這是便利貼
-          />
+          <textarea className="styled-textarea" placeholder="寫下你的想法..." value={noteText} onChange={(e) => setNoteText(e.target.value)} style={{ backgroundColor: "#fff9c4" }} />
         )}
 
-        <button
-          className="upload-btn"
-          onClick={handleUpload}
-          disabled={uploading}
-        >
-          {uploading ? "傳送中..." : "發布到大螢幕"}
-        </button>
+        <button className="upload-btn" onClick={handleUpload} disabled={uploading}>{uploading ? "傳送中..." : "發布到大螢幕"}</button>
       </div>
     </div>
   );
