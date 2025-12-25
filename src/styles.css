@@ -19,15 +19,33 @@ body {
   align-items: center;
   justify-content: center;
   padding: 20px;
+
+  /* ⭐ 新增：中山大學背景圖 */
+  /* 這裡使用一個臨時的公開連結，請替換成您自己的圖片連結 */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+    url("https://i.postimg.cc/SQvy9B0J/IMG-1379.jpg");
+  background-size: cover;
+  background-position: center;
+  backdrop-filter: blur(4px); /* 稍微模糊背景，讓前景更突出 */
 }
 .upload-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.95); /* 卡片稍微透明一點 */
   width: 100%;
   max-width: 400px;
   padding: 30px;
   border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
   text-align: center;
+}
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #2c3e50;
+  /* 讓標題更有質感 */
+  background: linear-gradient(45deg, #2c3e50, #3498db);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* 切換類型的標籤 (Tab) */
@@ -57,7 +75,8 @@ body {
 
 /* 輸入框與按鈕 */
 .styled-input,
-.styled-textarea {
+.styled-textarea,
+.file-input {
   width: 100%;
   padding: 12px;
   border: 2px solid #e1e4e8;
@@ -65,6 +84,11 @@ body {
   font-size: 1rem;
   outline: none;
   margin-bottom: 15px;
+  transition: border-color 0.3s;
+}
+.styled-input:focus,
+.styled-textarea:focus {
+  border-color: #3498db;
 }
 .styled-textarea {
   min-height: 100px;
@@ -72,12 +96,10 @@ body {
   font-family: inherit;
 }
 .file-input {
-  width: 100%;
   padding: 10px;
   background: #f8f9fa;
-  border-radius: 10px;
   border: 1px dashed #ccc;
-  margin-bottom: 15px;
+  cursor: pointer;
 }
 .upload-btn {
   width: 100%;
@@ -89,14 +111,16 @@ body {
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.upload-btn:active {
+  transform: scale(0.98);
 }
 .upload-btn:disabled {
   background: #ccc;
   cursor: not-allowed;
+  transform: none;
 }
-
-/* ... (保留上傳頁面的 CSS: upload-wrapper, upload-card 等等) ... */
-/* 請從這裡往下取代 */
 
 /* ============================
    2. 展示頁面 (大螢幕 - 橫向流動)
@@ -107,135 +131,15 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #111;
+  background-color: #111; /* 保持黑色背景 */
   display: flex;
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
-  /* 防止手機瀏覽器滑動導致網址列伸縮影響高度 */
   touch-action: none;
 }
 
-.flow-track-wrapper {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  position: relative;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.flow-track {
-  display: flex;
-  gap: 40px;
-  padding: 0 20px;
-
-  /* ⚠️ 關鍵修正 1：強制寬度為內容總長，防止手機擠壓 */
-  width: max-content;
-
-  min-width: 100vw;
-
-  /* ⚠️ 關鍵修正 2：啟動 GPU 硬體加速，手機跑起來才順 */
-  will-change: transform;
-}
-
-/* 展品卡片 */
-.flow-item {
-  flex-shrink: 0;
-  width: 300px;
-  height: 300px;
-  border-radius: 20px;
-  overflow: hidden;
-  position: relative;
-  background: #222;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  /* 加上 transform-style 讓 iOS 渲染更順 */
-  transform: translateZ(0);
-}
-
-/* ⚠️ 關鍵修正 3：手機版專用調整 (直立拿手機時) */
-@media (max-width: 768px) {
-  .flow-track {
-    gap: 20px; /* 間距縮小 */
-  }
-
-  .flow-item {
-    width: 180px; /* 卡片縮小 */
-    height: 180px;
-  }
-
-  .page-title {
-    font-size: 1.5rem; /* 標題縮小 */
-    padding: 15px 0 30px 0;
-  }
-
-  /* 調整上下兩排的高度比例，讓標題不會擋住太多 */
-  .flow-container {
-    padding-top: 50px;
-  }
-}
-
-/* ... 以下保留原本的圖片、便利貼樣式 ... */
-.flow-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.sticky-note-box {
-  width: 100%;
-  height: 100%;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  font-family: "Comic Sans MS", cursive, sans-serif;
-  color: #333;
-}
-/* 手機版便利貼字體縮小 */
-@media (max-width: 768px) {
-  .sticky-note-box {
-    font-size: 1rem;
-    padding: 10px;
-  }
-}
-
-.item-tag {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  padding: 5px 12px;
-  border-radius: 15px;
-  font-size: 0.8rem;
-}
-.sticky-note-box .item-tag {
-  background: rgba(255, 255, 255, 0.4);
-  color: #000;
-}
-
-/* 動畫定義 (不變) */
-@keyframes scroll-left {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-@keyframes scroll-right {
-  0% {
-    transform: translateX(-50%);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
-/* 標題樣式 (不變) */
+/* 標題樣式 */
 .page-title {
   position: absolute;
   top: 0;
@@ -255,4 +159,165 @@ body {
   text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
   letter-spacing: 3px;
   pointer-events: none;
+}
+
+/* ⭐ 新增：右下角 QR Code 浮動區塊 */
+.qr-code-container {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  z-index: 200; /* 確保在最上層 */
+
+  /* 毛玻璃效果 */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  padding: 15px;
+  border-radius: 15px;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  animation: slideUp 0.8s ease-out 0.5s both; /* 延遲一點出現 */
+}
+
+.qr-code-title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.qr-code-img {
+  width: 120px; /* QR Code 大小 */
+  height: 120px;
+  border-radius: 10px;
+  display: block; /* 移除圖片底部空隙 */
+}
+
+/* 軌道與卡片設定 */
+.flow-track-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.flow-track {
+  display: flex;
+  gap: 40px;
+  padding: 0 20px;
+  width: max-content;
+  min-width: 100vw;
+  will-change: transform;
+}
+.flow-item {
+  flex-shrink: 0;
+  width: 300px;
+  height: 300px;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  background: #222;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transform: translateZ(0);
+}
+@media (max-width: 768px) {
+  .flow-track {
+    gap: 20px;
+  }
+  .flow-item {
+    width: 180px;
+    height: 180px;
+  }
+  .page-title {
+    font-size: 1.5rem;
+    padding: 15px 0 30px 0;
+  }
+  .flow-container {
+    padding-top: 50px;
+  }
+  /* 手機版 QR Code 縮小一點 */
+  .qr-code-container {
+    bottom: 15px;
+    right: 15px;
+    padding: 10px;
+  }
+  .qr-code-img {
+    width: 90px;
+    height: 90px;
+  }
+  .qr-code-title {
+    font-size: 0.8rem;
+  }
+}
+
+/* 內容樣式 */
+.flow-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sticky-note-box {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  color: #333;
+}
+@media (max-width: 768px) {
+  .sticky-note-box {
+    font-size: 1rem;
+    padding: 10px;
+  }
+}
+.item-tag {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+}
+.sticky-note-box .item-tag {
+  background: rgba(255, 255, 255, 0.4);
+  color: #000;
+}
+
+/* 動畫定義 */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+@keyframes scroll-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
